@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#SBATCH -J deepsleepnet_sp_3
+#SBATCH --mem 90G
+#SBATCH -G 1
+#SBATCH -n 12
+#SBATCH -t 168:0:0
+#SBATCH -e slurm-%j-%x.out
+#SBATCH -o slurm-%j-%x.out
+#SBATCH -p dgx-only,gpu,overflow
+#SBATCH --mail-user=swaters36@gatech.edu
+#SBATCH --mail-type=END,FAIL
+
+echo "Current commit:"
+echo | git rev-parse --short HEAD
+# -Xfaulthandler
+scl enable rh-python36 "python3 -u ./LOO_crossval.py" 
