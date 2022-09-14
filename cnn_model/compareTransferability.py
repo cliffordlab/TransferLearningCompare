@@ -28,13 +28,13 @@ from xlwt import Workbook
 
 # Define inputs
 architecture = CNN_2D
-srcDataSet = 'mass'
+srcDataSet = 'mass'                              # Change this to the desired dataset
 targDataSet = 'SleepProfiler'
-savedMdlDir = './massCnn/model'
-saveOutputTo = './transferabilityResults_mass'
+savedMdlDir = './massCnn/model'                  # Change this to the desired pre-trained model
+saveOutputTo = './transferabilityResults_mass'   # Change this to the name of the desired name for the output file
 numFolds = 24
-retrainLayers = [-4]
-debug = False
+retrainLayers = [-4]                             # Change this to the number of layers from the output to retrain (-4 or -8 to replicate settings used in publication)
+debug = False                                    # Set this value to True if want to run only a few epochs on a few recordings for debugging purposes
 
 numChannels = 1
 downSampleTo = 100
@@ -100,11 +100,6 @@ elif srcDataSet == 'mros':
     # to use 'A1' and 'A2' to mean the mastoids: https://sleepdata.org/datasets/mros/files/m/browser/documentation/MrOS_Visit1_PSG_Manual_of_Procedures.pdf
     possibleChannels = [["C3"],["C4"]][:numChannels]
 
-elif srcDataSet == 'eegbud':
-    dataDir = '/labs/cliffordlab/data/EEG/hearables/Sleep_Data'
-    featureExtractionFunc = lambda *args,**kwargs: utils.extractFromEegBuds(*args,**kwargs,extractFeatures=extractFeatures)
-    possibleChannels = [["5","CH5","Ch5"]][:numChannels] #1,2 or 5, ["C3-A2","C3-M2","EEG C3-A2","EEG C3-M2"]
-
 else:
     print('Unknown dataset')
 
@@ -116,43 +111,36 @@ if targDataSet == 'cicc':
     dataDir = '/labs/cliffordlab/data/Challenge2018/training'
     featureExtractionFunc = lambda *args,**kwargs: utils.extractFromCicc(*args,**kwargs,extractFeatures=extractFeatures)
     possibleChannels = ['C3-M2','C4-M1'][:numChannels]
-    numFolds = 5
     
 elif targDataSet == 'wsc':
     dataDir = '/labs/cliffordlab/data/WSC/polysomnography/visit1'
     featureExtractionFunc = lambda *args,**kwargs: utils.extractFromWsc(*args,**kwargs,extractFeatures=extractFeatures)
     possibleChannels = [['C3_M2'],['O1_M2']][:numChannels]
-    numFolds = 5
     
 elif targDataSet == 'shhs':
     dataDir = '/labs/cliffordlab/data/shhs'
     featureExtractionFunc = lambda *args,**kwargs: utils.extractFromShhs(*args,**kwargs,extractFeatures=extractFeatures)
     possibleChannels = [["EEG(sec)","EEG2","EEG 2","EEG sec"],["EEG","EEG1","EEG 1"]][:numChannels] # Multiple possible names for same possibleChannels
-    numFolds = 5
     
 elif targDataSet == 'SleepProfiler':
     dataDir = '/labs/cliffordlab/data/EEG/Sleep_Profiler'
     featureExtractionFunc = lambda *args,**kwargs: utils.extractFromSleepProfiler(*args,**kwargs,extractFeatures=extractFeatures,dirList = None)
     possibleChannels = [['EEG3'],['EEG2']][:numChannels] #range(0,14,3)
-    numFolds = 24 #14 - len(holdOut)
 
 elif targDataSet == 'mass':
     dataDir = '/labs/cliffordlab/data/MASS'
     featureExtractionFunc = lambda *args,**kwargs: utils.extractFromMass(*args,**kwargs,extractFeatures=extractFeatures)
     possibleChannels = ['C3','C4'][:numChannels]
-    numFolds = 5
 
 elif targDataSet == 'isruc':
     dataDir = '/labs/cliffordlab/data/ISRUC'
     featureExtractionFunc = lambda *args,**kwargs: utils.extractFromIsruc(*args,**kwargs,extractFeatures=extractFeatures)
     possibleChannels = [["C3-A2","C3-M2","C3"],["C4-A1","C4-M1","C4"]][:numChannels]
-    numFolds = 5
 
 elif targDataSet == 'ssc':
     dataDir = '/labs/cliffordlab/data/SSC'
     featureExtractionFunc = lambda *args,**kwargs: utils.extractFromSSC(*args,**kwargs,extractFeatures=extractFeatures)
     possibleChannels = ["C3-A2"][:numChannels]
-    numFolds = 5
 
 elif targDataSet == 'mros':
     dataDir = '/labs/cliffordlab/data/MrOS'
@@ -160,13 +148,6 @@ elif targDataSet == 'mros':
     # NOTE: PossibleChannels labels indicate that this is a C3-A2 signal, but the MrOS document appears
     # to use 'A1' and 'A2' to mean the mastoids: https://sleepdata.org/datasets/mros/files/m/browser/documentation/MrOS_Visit1_PSG_Manual_of_Procedures.pdf
     possibleChannels = [["C3"],["C4"]][:numChannels]
-    numFolds = 5
-
-elif targDataSet == 'eegbud':
-    dataDir = '/labs/cliffordlab/data/EEG/hearables/Sleep_Data'
-    featureExtractionFunc = lambda *args,**kwargs: utils.extractFromEegBuds(*args,**kwargs,extractFeatures=extractFeatures)
-    possibleChannels = [["5","CH5","Ch5"]][:numChannels] #1,2 or 5, ["C3-A2","C3-M2","EEG C3-A2","EEG C3-M2"]
-    numFolds = 5
 
 else:
     print('Unknown dataset')

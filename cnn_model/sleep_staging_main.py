@@ -420,7 +420,7 @@ if (__name__ is "__main__") or (__name__ == "__main__"):
     max_trials = 40 # Note: this value only used when tuning
     epochs = 1000
 
-    #validationSet = [] # Skip validation and use all data for training
+    validationSet = [] # Skip validation and use all data for training
     
     # Set settings according to the dataset being used
     if dataSet == 'debug':
